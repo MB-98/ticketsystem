@@ -1,0 +1,131 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<title>Dashboard</title>
+	<h:outputStylesheet library="css" name="styles.css" />
+	<h:outputStylesheet library="webjars"
+		name="primeflex/2.0.0/primeflex.min.css" />
+	<link rel="stylesheet"
+		href="https://fonts.googleapis.com/css?family=Roboto" />
+</h:head>
+<h:body>
+	<div class="header">
+		<h:form>
+			<div class="header-nav">
+				<h1>Ticket Management System</h1>
+				<p:commandLink type="button" value="Dashboard" styleClass="ui-button-flat nav-btn active"/>
+				<p:commandLink type="button" value="My Test Runs" styleClass="ui-button-flat nav-btn"  ajax="false"  action="#{navigationController.getMyTestRuns}"/>
+			</div>
+		</h:form>
+		<div class="logout-btn">
+			<h:form>
+				<p:commandButton id="Logoutbutton" value="Logout" ajax="false" action="#{login.logout}"/>
+			</h:form>
+		</div>
+	</div>
+	<div class="content container">
+		<h:form>
+	        <p:growl id="messages" showDetail="true"/>
+	        <div class="toolbar-wrapper">
+		        <p:toolbar styleClass="toolbar">
+		           <p:toolbarGroup >
+		           	<span class="toolbar-header">Dashborad</span>
+		           </p:toolbarGroup>
+		           <p:toolbarGroup align="right" rendered="#{login.user.role.id eq 1}">
+		                 <p:commandButton type="button" value="Add" icon="pi pi-plus" styleClass="p-mr-2" onclick="PF('addModal').show()"/>
+		           </p:toolbarGroup>
+		       	</p:toolbar>
+	        </div>
+	   	</h:form>
+		<div class="p-grid req-col-wrapper" id="requirement-panel">
+	     	<p:repeat  value="#{requriementOverview.statusList}" var="s" varStatus="status">
+			    <div class="p-col-3 ">
+				    <div class="col-wrapper p-mr-1">
+				    	<div class="req-column ">
+				    		<div class="col-header p-text-center">
+				    		<span class="col-header-text">#{s.name}</span>
+				    		</div>
+				    		<div class="col-content">
+				    			<p:repeat rendered="#{s.id eq 1}" value="#{requriementOverview.newRequirements}" var="req" varStatus="status">
+				    				<h:form>
+						    			 <p:commandLink id="card-link" ajax="false"  action="#{navigationController.getRequirementDetails(req.id)}" style="margin-right:20px;">
+						    				<p:card styleClass="req-card">
+						    					<b>#{req.name}</b><br/>
+						    					<span>Test Runs: #{req.testruns.size()}</span><br/>
+						    					<span>Test Cases: #{req.testcases.size()}</span><br/>
+						    				</p:card>
+						    			</p:commandLink>
+				    				</h:form>
+				    			</p:repeat>
+				    			<p:repeat rendered="#{s.id eq 2}" value="#{requriementOverview.readyRequirements}" var="req" varStatus="status">
+				    				<h:form>
+						    			 <p:commandLink id="card-link" ajax="false"  action="#{navigationController.getRequirementDetails(req.id)}" style="margin-right:20px;">
+				    						<p:card styleClass="req-card">
+						    					<b>#{req.name}</b><br/>
+						    					<span>Test Runs: #{req.testruns.size()}</span><br/>
+						    					<span>Test Cases: #{req.testcases.size()}</span>
+					    					</p:card>
+					    				</p:commandLink>
+				    				</h:form>
+				    			</p:repeat>
+				    			<p:repeat rendered="#{s.id eq 3}" value="#{requriementOverview.inTestRequirements}" var="req" varStatus="status">
+				    				<h:form>
+					    			 	<p:commandLink id="card-link" ajax="false"  action="#{navigationController.getRequirementDetails(req.id)}" style="margin-right:20px;">
+						    				<p:card styleClass="req-card">
+						    					<b>#{req.name}</b><br/>
+						    					<span>Test Runs: #{req.testruns.size()}</span><br/>
+						    					<span>Test Cases: #{req.testcases.size()}</span>
+				    						</p:card>
+				    					</p:commandLink>
+				    				</h:form>
+				    			</p:repeat>
+				    			<p:repeat rendered="#{s.id eq 4}" value="#{requriementOverview.acceptedRequirements}" var="req" varStatus="status">
+					    			<h:form>
+						    			 <p:commandLink id="card-link" ajax="false"  action="#{navigationController.getRequirementDetails(req.id)}" style="margin-right:20px;">
+						    				<p:card styleClass="req-card">
+						    					<b>#{req.name}</b><br/>
+						    					<span>Test Runs: #{req.testruns.size()}</span><br/>
+						    					<span>Test Cases: #{req.testcases.size()}</span>
+						    				</p:card>
+					    				</p:commandLink>
+				    				</h:form>
+				    			</p:repeat>
+				    		</div>
+				    	</div>
+				    </div>
+			    </div>
+		    </p:repeat>
+		</div>
+	</div>
+	
+	<p:dialog header="Add Requirement" widgetVar="addModal" minHeight="40" width="350" showEffect="fade" modal="true">
+		<h:form id="add-form">
+			<p:growl id="growl" showDetail="true" />
+	    	<div class="p-grid ui-fluid">
+           		<div class="p-col-12">
+					<p:outputLabel value="Name:"/>
+					<br/>
+					<p:inputText  id="name-input" value="#{requriementOverview.newName}" /> 
+				</div>
+			
+				<div class="p-col-12">
+					<p:outputLabel  id="description-input" value="Descripton:" />
+					<br/>
+				 	<p:inputTextarea value="#{requriementOverview.newDescription}"/>
+				</div>
+			</div>
+		    <div class="dialog-footer float-right">
+		        <p:commandButton value="Cancel" onclick="PF('addModal').hide();$('#add-form').trigger('reset');" styleClass="ui-button-flat p-mr-2" style="width: 6rem" />
+		        <p:commandButton id="Savebutton" value="Save" ajax="false" action="#{requriementOverview.createRequirement}" style="width: 5rem" />
+		    </div>
+	    </h:form>
+	</p:dialog>
+
+</h:body>
+</html>

@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<title>Login</title>
+	<h:outputStylesheet library="css" name="styles.css" />
+	<h:outputStylesheet library="webjars"
+		name="primeflex/2.0.0/primeflex.min.css" />
+	<link rel="stylesheet"
+		href="https://fonts.googleapis.com/css?family=Roboto" />
+</h:head>
+<h:body>
+	<div class="header">
+		<h1>Ticket Management System</h1>
+	</div>
+	<div class="p-d-flex p-jc-center">
+		<p:card style="width: 25em; margin-top: 96px; ">
+			<h:form>
+				<h2 class="p-text-center">Login</h2>
+				<div class="p-grid ui-fluid">
+            		<div class="p-col-12">
+						<p:outputLabel value="Email:"/>
+						<br/>
+						<p:inputText  id="email-input" value="#{login.email}"/> 
+					</div>
+				
+					<div class="p-col-12">
+						<p:outputLabel value="Password:" />
+						<br/>
+						<p:password styleClass="card-input" value="#{login.password}"/>
+					</div>
+					<div class="p-col-12">
+						 <p:commandButton id="loginbutton" ajax="false" action="#{login.validateUsernamePassword}" value="Login" ></p:commandButton>
+					</div>
+					<div class="p-col-12">
+						 <h:messages globalOnly="true" />
+					</div>
+				</div>
+			</h:form>
+		</p:card>
+	</div>
+</h:body>
+
+</html>

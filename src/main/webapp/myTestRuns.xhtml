@@ -1,0 +1,97 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<title>My Test Runs</title>
+	<h:outputStylesheet library="css" name="styles.css" />
+	<h:outputStylesheet library="webjars"
+		name="primeflex/2.0.0/primeflex.min.css" />
+	<link rel="stylesheet"
+		href="https://fonts.googleapis.com/css?family=Roboto" />
+</h:head>
+<h:body>
+	<div class="header">
+		<h:form>
+			<div class="header-nav">
+				<h1>Ticket Management System</h1>
+				<p:commandLink type="button" value="Dashboard" styleClass="ui-button-flat nav-btn" ajax="false"  action="#{navigationController.getRequirementOverview}"/>
+				<p:commandLink type="button" value="My Test Runs" styleClass="ui-button-flat nav-btn active" ajax="false"  action="#{navigationController.getMyTestRuns}"/>
+			</div>
+		</h:form>
+		<div class="logout-btn">
+			<h:form>
+				<p:commandButton id="Logoutbutton" value="Logout" ajax="false" action="#{login.logout}"/>
+			</h:form>
+		</div>
+	</div>
+	<div class="content container">
+		<div class="panel">
+			<h:form>
+				<div class="panel-header">
+					<div class="panel-header-text">
+			            <span>Test Runs</span>
+			        </div>
+				</div>
+				<div class="panel-tabel">
+				 	<p:dataTable var="testRun" value="#{myTestRuns.testRunList}" rowKey="#{testRun.id}" allowUnsorting="false" sortMode="single">
+		          		<p:column style="width:2rem">
+			                <p:rowToggler/>
+			            </p:column>
+		             	<p:column headerText="Test Run" colspan="3" sortBy="#{testRun.name}">
+			                <h:outputText value="#{testRun.name}"/>
+			            </p:column>
+		             	<p:column headerText="Requirement" colspan="3" sortBy="#{testRun.requirement.name}">
+			                <h:outputText value="#{testRun.requirement.name}"/>
+			            </p:column>
+		             	<p:column headerText="Count" colspan="2" sortBy="#{testRun.testcaseAssoc.size()}">
+			                <h:outputText value="#{testRun.testcaseAssoc.size()}"/>
+			            </p:column>
+		             	<p:column headerText="Status" colspan="2" sortBy="#{testRun.status.name}">
+		             		<p:growl id="msg" showDetail="true"/>
+			                <p:selectOneMenu id="statusOption" value="#{testRun.status.id}" >
+			                    <f:selectItems value="#{myTestRuns.runStatusList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}"/>
+			                    <p:ajax event="itemSelect"  listener="#{myTestRuns.updateTestRunStatus}" update="msg"/>
+			                    <f:attribute name="testrunId" value="#{testRun.id}" />
+			                    <f:attribute name="testrunStatusId" value="#{testRun.status.id}" />
+			                </p:selectOneMenu>
+			            </p:column>
+		             	<p:column headerText="Assignee" colspan="2" sortBy="#{testRun.assignee.firstname}">
+			                <p:selectOneMenu id="userOption" value="#{testRun.assignee.id}" >
+			                    <f:selectItems value="#{myTestRuns.userList}" var="u" itemLabel="#{u.firstname} #{u.lastname}" itemValue="#{u.id}"/>
+			                    <p:ajax event="itemSelect"  listener="#{myTestRuns.updateTestRunAssignee}" update="msg"/>
+			                    <f:attribute name="testrunId" value="#{testRun.id}" />
+			                    <f:attribute name="testrunAssigneeId" value="#{testRun.assignee.id}" />
+			                </p:selectOneMenu>
+			            </p:column>
+		             	<p:rowExpansion>
+		               		<p:dataTable var="testCase" value="#{testRun.testcaseAssoc}" rowKey="#{testCase.testcase.id}" styleClass="noHeader">
+				             	<p:column colspan="2">
+					                <h:outputText value="#{testCase.testcase.name}"/>
+					            </p:column>
+					            <p:column headerText="Description" colspan="6">
+			                <h:outputText value="#{testCase.testcase.description}"/>
+			            </p:column>
+				             	<p:column styleClass="text-right" colspan="1">
+				             		<p:growl id="msgs" showDetail="true"/>
+				             	 	<p:selectOneMenu id="caseStatusOption" value="#{testCase.status.id}" >
+					                    <f:selectItems value="#{myTestRuns.caseStatusList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}"/>
+					                    <p:ajax event="itemSelect"  listener="#{myTestRuns.updateTestCaseStatus}" update="msgs"/>
+					                    <f:attribute name="testrunId" value="#{testRun.id}" />
+				              		 	<f:attribute name="testcaseId" value="#{testCase.testcase.id}" />
+				              		 	<f:attribute name="testCaseStatusId" value="#{testCase.status.id}" />
+				                	</p:selectOneMenu>
+					            </p:column>
+			        		</p:dataTable>
+	            		</p:rowExpansion>
+			        </p:dataTable>
+				</div>
+			</h:form>
+		</div>
+	</div>
+</h:body>
+</html>

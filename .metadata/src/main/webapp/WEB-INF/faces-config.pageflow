@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pageflow:Pageflow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pageflow="http://www.sybase.com/suade/pageflow" id="pf16493539753980" configfile="/ticketsystem/src/main/webapp/WEB-INF/faces-config.xml">
+  <nodes xsi:type="pageflow:PFPage" name="login.xhtml" x="122" y="178" id="pf16522904493780" referenceLink="//@navigationRule.0/@fromViewId|" outlinks="pf16522904493781" path="/login.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="requirementOverview.xhtml" x="338" y="178" id="pf16522904493782" referenceLink="//@navigationRule.0/@navigationCase.0/@toViewId|" inlinks="pf16522904493781" path="/requirementOverview.xhtml"/>
+  <links id="pf16522904493781" target="pf16522904493782" source="pf16522904493780" outcome="requirementOverview" fromaction="#{login.validateUsernamePassword}"/>
+</pageflow:Pageflow>

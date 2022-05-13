@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE xml>
+<faces-config version="2.2" xmlns="https://xmlns.jcp.org/xml/ns/javaee"
+	xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="https://xmlns.jcp.org/xml/ns/javaee 
+	https://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd">
+
+	<navigation-rule>
+		<from-view-id>/login.xhtml</from-view-id>
+		<navigation-case>
+			<from-action>#{login.validateUsernamePassword}</from-action>
+			<from-outcome>requirementOverview</from-outcome>
+			<to-view-id>/requirementOverview.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+</faces-config>

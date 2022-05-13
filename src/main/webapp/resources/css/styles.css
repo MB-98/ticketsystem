@@ -1,0 +1,164 @@
+body{
+	 font-family: 'Roboto';
+	 margin: 0;
+}
+.container {
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+@media (min-width: 768px) {
+  .container {
+    width: 750px;
+  }
+}
+@media (min-width: 992px) {
+  .container {
+    width: 970px;
+  }
+}
+@media (min-width: 1200px) {
+  .container {
+    width: 1170px;
+  }
+}
+
+.header{
+	height: 86px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 0 32px;
+    box-shadow: 0px 0px 16px -4px gray;
+}
+.header h1{
+	font-weight: bold;
+}
+.logout-btn{
+	display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.toolbar-wrapper{
+	margin: 24px 8px 8px 8px;
+}
+.toolbar{
+	background-color: white !important;
+	border: 1px solid #f3f3f3 !important;
+	border-radius: 6px !important;
+}
+.toolbar-header{
+	font-size: 20px;
+	font-weight: bold;
+}
+.card-input{
+	width: 100%
+}
+.req-col-wrapper{
+	padding: 8px;
+}
+.col-wrapper{
+	height: min-content;
+	min-height: 400px;
+}
+.req-column{
+	background-color: #f3f3f3;
+	border-radius: 6px;
+	height: 100%;
+	width: 100%;
+}
+.col-header{
+	background-color: white;
+	padding: 6px;
+	border-top:    1px solid #f3f3f3;
+  	border-right:  1px solid #f3f3f3;
+  	border-left:  1px solid #f3f3f3;
+  	border-radius: 6px 6px 0 0;
+}
+.col-header-text{
+	margin: auto;
+}
+.col-content{
+	padding: 6px;
+	display: flex;
+	flex-direction: column;
+	min-height: 400px;
+}
+.req-card{
+	margin-bottom: 6px;
+	display: flex;
+	flex-direction: row;
+}
+.ui-card-content{
+	padding: 0 !important;
+}
+.float-right{
+	float: right;
+}
+.text-right{
+	text-align: right;
+}
+.text-center{
+	text-align: center;
+}
+.panel{
+	margin-top: 24px;
+	border: 1px solid #f3f3f3;
+	border-radius: 6px ;
+	
+}
+.panel-header{
+	display: flex;
+	justify-content: space-between;
+	padding: 16px
+}
+.panel-header-text{
+	font-size: 20px;
+	font-weight: bold;
+	width: fit-content;
+}
+.req-description{
+	display: flex;
+	width: 600px;
+	text-align: left;
+	padding: 0 16px 16px 16px;
+}
+.ui-inplace-display{
+	padding: 0 !important;
+}
+.status-select{
+	float: right;
+	width: 100px;
+}
+.noHeader.ui-datatable table thead tr {
+    display: none;
+}
+.header-nav{
+	display: flex;
+}
+.nav-btn{
+	margin-left: 16px !important;
+	color: black !important;
+	font-size: 16px !important;
+	font-weight: bold;
+	height: 86px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-bottom: 3px solid white;
+	width: 162px;
+}
+
+.nav-btn.active{
+	border-bottom: 3px solid #2196F3;
+}
+.white{
+	color: white;
+}
+.green{
+	color: green;
+}
+.red{
+	color: red;
+}

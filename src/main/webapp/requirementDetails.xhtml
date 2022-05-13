@@ -1,0 +1,259 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<title>Requirement Details</title>
+	<h:outputStylesheet library="css" name="styles.css" />
+	<h:outputStylesheet library="webjars" name="primeflex/2.0.0/primeflex.min.css" />
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto" />
+</h:head>
+<h:body>
+	<div class="header">
+		<h:form>
+			<div class="header-nav">
+				<h1>Ticket Management System</h1>
+				<p:commandLink type="button" value="Dashboard" styleClass="ui-button-flat nav-btn"  ajax="false"  action="#{navigationController.getRequirementOverview}"/>
+				<p:commandLink type="button" value="My Test Runs" styleClass="ui-button-flat nav-btn"  ajax="false"  action="#{navigationController.getMyTestRuns}"/>
+			</div>
+		</h:form>
+		<div class="logout-btn">
+			<h:form>
+				<p:commandButton id="Logoutbutton" value="Logout" ajax="false" action="#{login.logout}"/>
+			</h:form>
+		</div>
+	</div>
+	<div class="content container">
+	<!-- TestRun Panel -->
+		<div class="panel">
+			<h:form>	
+				<p:growl id="messages" showDetail="true"/>
+				<div class="panel-header">
+					<div class="panel-header-text">
+					 	<p:inplace editor="true">
+				            <p:inputText required="true" value="#{requirementDetails.requirement.name}"/>
+				            <p:ajax event="save" listener="#{requirementDetails.updateRequirement}" update="messages" />
+				        </p:inplace>
+			        </div>
+			         <p:selectOneMenu id="option" value="#{requirementDetails.status}">
+	                    <f:selectItems value="#{requirementDetails.statusList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}"/>
+	                    <p:ajax event="valueChange" listener="#{requirementDetails.updateStatus}" update="messages" />
+	                </p:selectOneMenu>
+				</div>
+				
+				<div class="req-description">
+				 	<p:inplace editor="true">
+		             	<p:inputTextarea value="#{requirementDetails.requirement.description}"/>
+		             	<p:ajax event="save" listener="#{requirementDetails.updateRequirement}" update="messages" />
+			        </p:inplace>
+				</div>
+			</h:form>
+		</div>
+		<div class="panel">
+			<h:form>
+				<div class="panel-header">
+					<div class="panel-header-text">
+			            <span>Test Runs</span>
+			        </div>
+			         <p:commandButton rendered="#{login.user.role.id eq 1 || login.user.role.id eq 2}" type="button" value="Add" icon="pi pi-plus" styleClass="p-mr-2" onclick="PF('addTestRun').show()"/>
+				</div>
+				<div class="panel-tabel">
+				 	<p:dataTable var="testRun" value="#{requirementDetails.requirement.testruns}" rowKey="#{testRun.id}" allowUnsorting="false" sortMode="single">
+		          		<p:column style="width:2rem">
+			                <p:rowToggler/>
+			            </p:column>
+		             	<p:column headerText="Test Run" colspan="4" sortBy="#{testRun.name}">
+			                <h:outputText value="#{testRun.name}"/>
+			            </p:column>
+		             	<p:column headerText="Count" colspan="1" sortBy="#{testRun.testcaseAssoc.size()}">
+			                <h:outputText value="#{testRun.testcaseAssoc.size()}"/>
+			            </p:column>
+		             	<p:column headerText="Status" colspan="2" sortBy="#{testRun.status.name}">
+		             		<p:growl id="msg" showDetail="true"/>
+			                <p:selectOneMenu id="statusOption" value="#{testRun.status.id}" >
+			                    <f:selectItems value="#{requirementDetails.runStatusList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}"/>
+			                    <p:ajax event="itemSelect"  listener="#{requirementDetails.updateTestRunStatus}" update="msg"/>
+			                    <f:attribute name="testrunId" value="#{testRun.id}" />
+			                    <f:attribute name="testrunStatusId" value="#{testRun.status.id}" />
+			                </p:selectOneMenu>
+			            </p:column>
+		             	<p:column headerText="Assignee" colspan="2" sortBy="#{testRun.assignee.firstname}">
+			                <p:selectOneMenu id="userOption" value="#{testRun.assignee.id}" >
+			                    <f:selectItems value="#{requirementDetails.userList}" var="u" itemLabel="#{u.firstname} #{u.lastname}" itemValue="#{u.id}"/>
+			                    <p:ajax event="itemSelect"  listener="#{requirementDetails.updateTestRunAssignee}" update="msg"/>
+			                    <f:attribute name="testrunId" value="#{testRun.id}" />
+			                    <f:attribute name="testrunAssigneeId" value="#{testRun.assignee.id}" />
+			                </p:selectOneMenu>
+			            </p:column>
+		             	<p:column headerText="Actions" styleClass="text-center" colspan="1" rendered="#{login.user.role.id eq 1 || login.user.role.id eq 2}">
+			               	<p:commandButton icon="pi pi-pencil" actionListener="#{requirementDetails.setSelectedTestRun(testRun)}" update="edit-run-form" onclick="PF('editTestRun').show()" styleClass="rounded-button ui-button-flat" />
+    						<p:commandButton icon="pi pi-trash" ajax="false"   action="#{requirementDetails.deleteRun(testRun.id)}" styleClass="rounded-button ui-button-secondary ui-button-flat" />
+			            </p:column>
+			            
+		             	<p:rowExpansion>
+		               		<p:dataTable var="testCase" value="#{testRun.testcaseAssoc}" rowKey="#{testCase.testcase.id}" styleClass="noHeader">
+				             	<p:column colspan="2">
+					                <h:outputText value="#{testCase.testcase.name}"/>
+					            </p:column>
+					            <p:column headerText="Description" colspan="6">
+			                <h:outputText value="#{testCase.testcase.description}"/>
+			            </p:column>
+				             	<p:column styleClass="text-right" colspan="1">
+				             		<p:growl id="msgs" showDetail="true"/>
+				             	 	<p:selectOneMenu id="caseStatusOption" value="#{testCase.status.id}" >
+					                    <f:selectItems value="#{requirementDetails.caseStatusList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}"/>
+					                    <p:ajax event="itemSelect"  listener="#{requirementDetails.updateTestCaseStatus}" update="msgs"/>
+					                    <f:attribute name="testrunId" value="#{testRun.id}" />
+				              		 	<f:attribute name="testcaseId" value="#{testCase.testcase.id}" />
+				              		 	<f:attribute name="testCaseStatusId" value="#{testCase.status.id}" />
+				                	</p:selectOneMenu>
+					            </p:column>
+			        		</p:dataTable>
+	            		</p:rowExpansion>
+			        </p:dataTable>
+				</div>
+			</h:form>
+		</div>
+		
+		<!-- TestRun Panel -->
+		<div class="panel">
+			<h:form>
+				<div class="panel-header">
+					<div class="panel-header-text">
+			            <span>Test Cases</span>
+			        </div>
+			         <p:commandButton rendered="#{login.user.role.id eq 1 || login.user.role.id eq 3}" type="button" value="Add" icon="pi pi-plus" styleClass="p-mr-2" onclick="PF('addTestCase').show()" />
+				</div>
+				<div class="panel-tabel">
+				 	<p:dataTable var="testCase" value="#{requirementDetails.requirement.testcases}" rowKey="#{testCase.id}" allowUnsorting="false" sortMode="single">
+		             	<p:column headerText="Name" colspan="3" sortBy="#{testCase.name}">
+			                <h:outputText value="#{testCase.name}" />
+			            </p:column>
+		             	<p:column headerText="Description" colspan="6" sortBy="#{testCase.description}">
+			                <h:outputText value="#{testCase.description}"/>
+			            </p:column>
+		             	<p:column rendered="#{login.user.role.id eq 1 || login.user.role.id eq 3}" headerText="Actions" styleClass="text-center" colspan="1">
+             		 		<p:commandButton icon="pi pi-pencil" actionListener="#{requirementDetails.setSelectedTestCase(testCase)}" update="edit-case-form" onclick="PF('editTestCase').show()" styleClass="rounded-button ui-button-flat" />
+    						<p:commandButton ajax="false"  action="#{requirementDetails.deleteCase(testCase.id)}" icon="pi pi-trash" styleClass="rounded-button ui-button-secondary ui-button-flat" />
+			            </p:column>
+	        		</p:dataTable>
+				</div>
+			</h:form>
+		</div>
+	</div>
+	
+	
+	<!-- Dialogs -->
+	<!-- Add TestRun Dialog -->
+	<p:dialog header="Add Test Run" widgetVar="addTestRun" minHeight="40" width="600" showEffect="fade" modal="true">
+		<h:form id="add-run-form">
+			<p:growl id="growl-run" showDetail="true" />
+	    	<div class="p-grid ui-fluid">
+           		<div class="p-col-12">
+					<p:outputLabel value="Name:"/>
+					<br/>
+					<p:inputText  id="name-run-input" value="#{requirementDetails.newRunName}" /> 
+				</div>
+				<div class="p-col-12">
+					<p:outputLabel value="Assignee:"/>
+					<br/>
+					<p:selectOneMenu id="caseStatusOption" value="#{requirementDetails.newRunAssigneeId}" >
+	                    <f:selectItems value="#{requirementDetails.userList}" var="u" itemLabel="#{u.firstname} #{u.lastname}" itemValue="#{u.id}"/>
+	               	</p:selectOneMenu>
+				</div>
+				<div class="p-col-12">
+					<p:selectManyMenu id="testCaseSelection" value="#{requirementDetails.selectedTestCasesIds}"   filter="true" filterMatchMode="contains" showCheckbox="true" styleClass="manymenu-advanced">
+			            <f:selectItems value="#{requirementDetails.requirement.testcases}" var="testCase" itemLabel="#{testCase.name}" itemValue="#{testCase.id}"/>
+			        </p:selectManyMenu>
+				</div>
+			</div>
+		    <div class="dialog-footer float-right">
+		        <p:commandButton value="Cancel" onclick="PF('addTestRun').hide();$('#add-run-form').trigger('reset');" styleClass="ui-button-flat p-mr-2" style="width: 6rem" />
+		        <p:commandButton id="SaveRunbutton" value="Save" action="#{requirementDetails.createTestRun}"  update="growl-run" style="width: 5rem" />
+		    </div>
+	    </h:form>
+	</p:dialog>
+	
+	<!-- Add TestCase Dialog -->
+	<p:dialog header="Add Test Case" widgetVar="addTestCase" minHeight="40" width="600" showEffect="fade" modal="true">
+		<h:form id="add-case-form">
+			<p:growl id="growl-case" showDetail="true" />
+	    	<div class="p-grid ui-fluid">
+           		<div class="p-col-12">
+					<p:outputLabel value="Name:"/>
+					<br/>
+					<p:inputText  id="name-case-input" value="#{requirementDetails.newCaseName}" /> 
+				</div>
+				<div class="p-col-12">
+					<p:outputLabel  id="description-case-input" value="Descripton:" />
+					<br/>
+				 	<p:inputTextarea value="#{requirementDetails.newCaseDescription}"/>
+				</div>
+			</div>
+		    <div class="dialog-footer float-right">
+		        <p:commandButton value="Cancel" onclick="PF('addTestCase').hide();$('#add-case-form').trigger('reset');" styleClass="ui-button-flat p-mr-2" style="width: 6rem" />
+		        <p:commandButton id="SaveCasebutton" value="Save" ajax="false" action="#{requirementDetails.createTestCase}" update="growl-case" style="width: 5rem" />
+		    </div>
+	    </h:form>
+	</p:dialog>
+	
+	<!-- Edit TestRun Dialog -->
+	<p:dialog header="Edit Test Run" widgetVar="editTestRun" minHeight="40" width="600" showEffect="fade" modal="true">
+		<h:form id="edit-run-form">
+			<p:growl id="growl" showDetail="true" />
+	    	<div class="p-grid ui-fluid">
+           		<div class="p-col-12">
+					<p:outputLabel value="Name:"/>
+					<br/>
+					<p:inputText  id="name-run-input" value="#{requirementDetails.selectedTestRun.name}" /> 
+				</div>
+				<div class="p-col-12">
+					<p:outputLabel value="Assignee:"/>
+					<br/>
+					<p:selectOneMenu id="caseStatusOption" value="#{requirementDetails.newRunAssigneeId}" >
+	                    <f:selectItems value="#{requirementDetails.userList}" var="u" itemLabel="#{u.firstname} #{u.lastname}" itemValue="#{u.id}"/>
+	               	</p:selectOneMenu>
+				</div>
+				<div class="p-col-12">
+					<p:selectManyMenu id="testCaseSelection" value="#{requirementDetails.selectedTestCasesIds}"   filter="true" filterMatchMode="contains" showCheckbox="true" styleClass="manymenu-advanced">
+			            <f:selectItems value="#{requirementDetails.requirement.testcases}" var="testCase" itemLabel="#{testCase.name}" itemValue="#{testCase.id}"/>
+			        </p:selectManyMenu>
+				</div>
+			</div>
+		    <div class="dialog-footer float-right">
+		        <p:commandButton value="Cancel" onclick="PF('editTestRun').hide();$('#edit-run-form').trigger('reset');" styleClass="ui-button-flat p-mr-2" style="width: 6rem" />
+		        <p:commandButton id="SaveRunbutton" value="Save" action="#{requirementDetails.updateTestRun}"  update="growl" style="width: 5rem" />
+		    </div>
+	    </h:form>
+	</p:dialog>
+	
+	<!-- Edit TestCase Dialog -->
+	<p:dialog header="Edit Test Case" widgetVar="editTestCase" minHeight="40" width="600" showEffect="fade" modal="true">
+		<h:form id="edit-case-form">
+			<p:growl id="growl" showDetail="true" />
+	    	<div class="p-grid ui-fluid">
+           		<div class="p-col-12">
+					<p:outputLabel value="Name:"/>
+					<br/>
+					<p:inputText  id="name-case-input" value="#{requirementDetails.selectedTestCase.name}" /> 
+				</div>
+				<div class="p-col-12">
+					<p:outputLabel  id="description-case-input" value="Descripton:" />
+					<br/>
+				 	<p:inputTextarea value="#{requirementDetails.selectedTestCase.description}"/>
+				</div>
+			</div>
+		    <div class="dialog-footer float-right">
+		        <p:commandButton value="Cancel" onclick="PF('editTestCase').hide();$('#edit-case-form').trigger('reset');" styleClass="ui-button-flat p-mr-2" style="width: 6rem" />
+		        <p:commandButton id="SaveCasebutton" value="Save" ajax="false" action="#{requirementDetails.updateTestCase}" style="width: 5rem" />
+		    </div>
+	    </h:form>
+	</p:dialog>
+	
+</h:body>
+
+</html>
