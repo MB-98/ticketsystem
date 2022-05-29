@@ -1,5 +1,5 @@
 # Ticket-System-Testmanagement
- This is a JSF web application to manage manual user tests.
+ This is a JSF Maven web application to manage manual user tests.
 
 ![image](https://user-images.githubusercontent.com/61287177/170870577-52325e9e-ba65-44c6-a509-2326e7345484.png)
 
